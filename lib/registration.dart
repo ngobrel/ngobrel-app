@@ -6,7 +6,10 @@ import 'package:flutter/services.dart';
 import 'registration-verification.dart';
 
 class RegistrationPage extends StatefulWidget {
-  RegistrationPage({Key key, this.title}) : super(key: key);
+  RegistrationPage({Key key, this.title}) : super(key: key) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
+
 
   final String title;
 

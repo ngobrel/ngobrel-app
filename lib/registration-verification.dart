@@ -2,23 +2,22 @@ library ngobrel_app.registration_verification;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'db.dart';
+import 'settings.dart';
 
 class RegistrationVerification extends StatefulWidget {
   RegistrationVerification({Key key, this.phoneNumber}) : super(key: key);
 
   final String phoneNumber;
   @override
-  _RegistrationVerificationState createState() => new _RegistrationVerificationState(phoneNumber);
+  _RegistrationVerificationState createState() => new _RegistrationVerificationState();
 }
 
 class _RegistrationVerificationState extends State<RegistrationVerification> {
 
-  _RegistrationVerificationState(String phoneNumber) :_phoneNumber = phoneNumber;
-
   final _formKey = GlobalKey<FormState>();
   bool _formWasEdited = false;
   String _verificationText;
-  final String _phoneNumber;
 
   String _validateVerificationText(String value) {
     _formWasEdited = true;
@@ -54,11 +53,15 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
     );
   }
 
-  void _verify() {
+  void _verify() async {
     if (_verificationText != '1234') {
       _verificationFailed();
     } else {
-      Navigator.of(context).pop();
+      var db = Db();
+      await db.populateData(int.parse(widget.phoneNumber));
+      var settings = Settings();
+      settings.myId = int.parse(widget.phoneNumber);
+      Navigator.pushNamedAndRemoveUntil(context, "/chatList", (Route<dynamic> route) => false);
     }
   }
 
@@ -74,7 +77,7 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
               'Verification',
               style: new TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
             ),
-            Text('We have sent you an SMS containing a verification code to ' + _phoneNumber + '.'),
+            Text('We have sent you an SMS containing a verification code to ' + widget.phoneNumber + '.'),
             Text('Please type in the verification code below.'),
             TextFormField(
               decoration: const InputDecoration(
