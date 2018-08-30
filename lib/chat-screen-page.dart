@@ -70,7 +70,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                   Text(entry['sender_id'].toString(),style: TextStyle(fontWeight: FontWeight.bold),),
                   _getQuoteText(entry),
                   _getThumbnail(entry),
-                  Text(entry['text'])
+                  Text(entry['text'] + '\n')
                 ]),
               Positioned(
                 right: 0.0,
