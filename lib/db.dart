@@ -74,8 +74,10 @@ class Db {
 
 class DatabaseList extends StatefulWidget {
 
-  DatabaseList({Key key, this.query, this.itemBuilder}) : super(key: key);
+  DatabaseList({this.key, this.reverse: false, this.query, this.itemBuilder}) : super(key: key);
 
+  final bool reverse;
+  final Key key;
   final String query;
   final Function itemBuilder;
 
@@ -87,6 +89,8 @@ class _DatabaseListState extends State<DatabaseList> {
 
   Widget _createList(BuildContext context, List<Map> data) {
     return ListView.builder(
+        key: widget.key,
+        reverse: widget.reverse,
         itemCount: data.length,
         itemBuilder: (BuildContext context, int index) {
           return widget.itemBuilder(context, data[index], index);

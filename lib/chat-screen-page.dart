@@ -100,7 +100,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         Container(
           decoration: BoxDecoration(color: Colors.black12),
           child: DatabaseList(
-          query: 'select * from conversations where chat_id=$chatWithId order by timestamp asc',
+            reverse: true,
+            query: 'select * from conversations where chat_id=$chatWithId order by timestamp desc',
             itemBuilder: (BuildContext context, Map entry, int i) {
               return _buildRow(context, entry, i);
             },

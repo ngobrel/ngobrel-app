@@ -77,14 +77,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
+      child:
+      Padding(
+        padding: EdgeInsets.all(32.0),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Welcome',
             style: new TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
           ),
+          Padding(padding: EdgeInsets.all(8.0),),
           Text('Let\'s prepare some details before we start chatting. Please enter your phone number below:'),
+          Padding(padding: EdgeInsets.all(16.0),),
+
           TextFormField(
             autofocus: true,
             decoration: const InputDecoration(
@@ -115,6 +121,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

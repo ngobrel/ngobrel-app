@@ -70,15 +70,24 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
     return new Scaffold(
       body: Form(
         key: _formKey,
-        child: Column(
+        child:
+          Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               'Verification',
               style: new TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
             ),
+            Padding(padding: EdgeInsets.all(8.0),),
+
             Text('We have sent you an SMS containing a verification code to ' + widget.phoneNumber + '.'),
+            Padding(padding: EdgeInsets.all(8.0),),
+
             Text('Please type in the verification code below.'),
+            Padding(padding: EdgeInsets.all(8.0),),
+
             TextFormField(
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
@@ -118,7 +127,7 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
               ),
             )
           ],
-        ),
+        )),
       ),
     );
   }
