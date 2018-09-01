@@ -87,13 +87,15 @@ class DatabaseList extends StatefulWidget {
 
 class _DatabaseListState extends State<DatabaseList> {
 
+
   Widget _createList(BuildContext context, List<Map> data) {
     return ListView.builder(
         key: widget.key,
         reverse: widget.reverse,
         itemCount: data.length,
         itemBuilder: (BuildContext context, int index) {
-          return widget.itemBuilder(context, data[index], index);
+          var item = widget.itemBuilder(context, data[index], index);
+          return item;
         }
     );
   }
