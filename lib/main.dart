@@ -8,7 +8,7 @@ import 'db.dart';
 
 void main() async {
   Db db = Db();
-  await db.init();
+  db.init();
   runApp(new NgobrelApp());
 }
 

@@ -28,47 +28,51 @@ class Db {
     database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
           await db.execute(
-              "CREATE TABLE chat_list (chat_id INTEGER PRIMARY KEY, updated_at INTEGER, created_at INTEGER, excerpt TEXT, title TEXT, avatar BLOB, has_notification INTEGER)");
+              "CREATE TABLE chat_list (chat_id TEXT PRIMARY KEY, updated_at INTEGER, created_at INTEGER, excerpt TEXT, title TEXT, avatar BLOB, notification INTEGER)");
 
           await db.execute(
-              "CREATE TABLE conversations (chat_id INTEGER, message_id INTEGER, sender_id INTEGER, sender_device_id INTEGER, timestamp INTEGER, text TEXT, thumbnail BLOB, quote_text TEXT, quote_thumbnail BLOB, message_type INTEGER, state INTEGER, reception_state INTEGER)");
+              "CREATE TABLE conversations (chat_id TEXT, message_id INTEGER, sender_id TEXT, sender_device_id TEXT, timestamp INTEGER, text TEXT, thumbnail BLOB, quote_text TEXT, quote_thumbnail BLOB, message_type INTEGER, state INTEGER, reception_state INTEGER)");
 
           await db.execute("create index conversations_chat_id on conversations(chat_id)");
           await db.execute("create unique index conversations_chat_id_message_id on conversations(chat_id, message_id)");
-
-
-
         });
   }
 
-  void populateData(int id) async {
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, has_notification) values (1, 1, 1, 'Omama olala okaka orama osama obama okama olama', 'Omama', 1)");
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, has_notification) values (2, 1535293181413, 1, 'Orama Okaka Olala Osasa Oraya', 'Urara Uta Usalala', 0)");
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, has_notification) values (3, 1535093181413, 1, '📷 Photo', 'Popa Piopola', 1)");
+  void populateData(String id) async {
+    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-1000-0000-000000000001', 1, 1, 'Omama olala okaka orama osama obama okama olama', 'Omama', 1)");
+    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-1000-0000-000000000002', 1535293181413, 1, 'Orama Okaka Olala Osasa Oraya', 'Urara Uta Usalala', 0)");
+    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000002', 1535093181413, 1, '📷 Photo', 'Popa Piopola', 1)");
 
     var img = await rootBundle.load("assets/picsum1.jpg");
-    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = 1");
+    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-1000-0000-000000000001'");
     img = await rootBundle.load("assets/picsum2.jpg");
-    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = 2");
+    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-1000-0000-000000000002'");
     img = await rootBundle.load("assets/picsum3.jpg");
-    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = 3");
+    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-0000-0000-000000000002'");
 
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 1, $id, 100, 1535293181413, 'Hoi', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 2, $id, 100, 1535293281413, 'Hoi ya benar', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 3, 81291911010, 101, 1535293381413, 'One of the most prominent changes in the Lollipop release is a redesigned user interface built around a design language known as Material Design, which was made to retain a paper-like feel to the interface. Other changes include improvements to the notifications, which can be accessed from the lockscreen and displayed within applications as top-of-the-screen banners. Google also made internal changes to the platform, with the Android Runtime (ART) officially replacing Dalvik for improved application performance, and with changes intended to improve and optimize battery usage.', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 4, $id, 100, 1535293481413, 'Android 5.0 introduces a refreshed notification system. Individual notifications are now displayed on cards to adhere to the material design language, and batches of notifications can be grouped by the app that produced them. Notifications are now displayed on the lock screen as cards, and heads up notifications can also be displayed as large banners across the top of the screen, along with their respective action buttons', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 5, 81291911010, 101, 1535293501413, 'The release was internally codenamed Lemon Meringue Pie', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 6, 81291911010, 101, 1535293511413, 'OK', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 7, $id, 100, 1535293681413, 'The material design language will not only be used on Android, but across Google s suite of web software as well, providing a consistent experience across all platforms', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, quote_text, message_type, state, reception_state) values (1, 8, $id, 100, 1535293681413, 'A developer preview of Android L, build LPV79', 'Android 5.0 introduces a refreshed notification system. Individual notifications are now displayed on cards to adhere to the material design language, and batches of notifications can be grouped by the app that produced them. Notifications are now displayed on the lock screen as cards, and heads up notifications can also be displayed as large banners across the top of the screen, along with their respective action buttons', 0, 0, 1)");
-    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values (1, 9, 81291911010, 101, 1535293691413, 'OK', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 1, $id, '10000000-1000-0000-0000-000000000001', 1535293181413, 'Hoi', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 2, $id, '10000000-1000-0000-0000-000000000001', 1535293281413, 'Hoi ya benar', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 3, '10000000-0000-0000-0000-000000000002', '10000000-1000-0000-0000-000000000002', 1535293381413, 'One of the most prominent changes in the Lollipop release is a redesigned user interface built around a design language known as Material Design, which was made to retain a paper-like feel to the interface. Other changes include improvements to the notifications, which can be accessed from the lockscreen and displayed within applications as top-of-the-screen banners. Google also made internal changes to the platform, with the Android Runtime (ART) officially replacing Dalvik for improved application performance, and with changes intended to improve and optimize battery usage.', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 4, $id, '10000000-0000-0000-0000-000000000001', 1535293481413, 'Android 5.0 introduces a refreshed notification system. Individual notifications are now displayed on cards to adhere to the material design language, and batches of notifications can be grouped by the app that produced them. Notifications are now displayed on the lock screen as cards, and heads up notifications can also be displayed as large banners across the top of the screen, along with their respective action buttons', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 5, '10000000-0000-0000-0000-000000000002', '10000000-1000-0000-0000-000000000002', 1535293501413, 'The release was internally codenamed Lemon Meringue Pie', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 6, '10000000-0000-0000-0000-000000000002', '10000000-1000-0000-0000-000000000002', 1535293511413, 'OK', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 7, $id, '10000000-0000-0000-0000-000000000001', 1535293681413, 'The material design language will not only be used on Android, but across Google s suite of web software as well, providing a consistent experience across all platforms', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, quote_text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 8, $id, '10000000-0000-0000-0000-000000000001', 1535293681413, 'A developer preview of Android L, build LPV79', 'Android 5.0 introduces a refreshed notification system. Individual notifications are now displayed on cards to adhere to the material design language, and batches of notifications can be grouped by the app that produced them. Notifications are now displayed on the lock screen as cards, and heads up notifications can also be displayed as large banners across the top of the screen, along with their respective action buttons', 0, 0, 1)");
+    await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 9, '10000000-0000-0000-0000-000000000002', '10000000-1000-0000-0000-000000000002', 1535293691413, 'OK', 0, 0, 1)");
 
     img = await rootBundle.load("assets/500x400.jpeg");
-    await database.update("conversations", {"thumbnail": img.buffer.asUint8List()}, where: "chat_id = 1 and message_id=2");
+    await database.update("conversations", {"thumbnail": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-0000-0000-000000000002' and message_id=2");
 
   }
 
-  Future<List<Map>> query(String q) async => database.rawQuery(q);
+  Future<List<Map>> query(String q) async {
+    print('db query' + q);
+    return database.rawQuery(q);
+  }
+
+  Future<void> insert(String q, List<dynamic> values) => database.rawInsert(q, values);
+  Future<int> update(String q, List<dynamic> values) => database.rawUpdate(q, values);
+
 }
 
 
@@ -86,9 +90,8 @@ class DatabaseList extends StatefulWidget {
 }
 
 class _DatabaseListState extends State<DatabaseList> {
-
-
   Widget _createList(BuildContext context, List<Map> data) {
+    print('db list created');
     return ListView.builder(
         key: widget.key,
         reverse: widget.reverse,

@@ -58,9 +58,9 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
       _verificationFailed();
     } else {
       var db = Db();
-      await db.populateData(int.parse(widget.phoneNumber));
+      db.populateData('10000000-0000-0000-0000-000000000001');
       var settings = Settings();
-      settings.myId = int.parse(widget.phoneNumber);
+      settings.myId = '10000000-0000-0000-0000-000000000001';
       Navigator.pushNamedAndRemoveUntil(context, "/chatList", (Route<dynamic> route) => false);
     }
   }

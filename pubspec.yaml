@@ -11,6 +11,9 @@ dependencies:
   image_picker: ^0.4.7
   sqflite: any
   intl: any
+  grpc: any
+  fixnum: any
+  protobuf: any
 
 dev_dependencies:
   flutter_test:

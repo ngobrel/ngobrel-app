@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'db.dart';
 import 'utils.dart';
 import 'settings.dart';
+import 'message.dart';
 
 class ChatScreenPage extends StatefulWidget {
   ChatScreenPage({Key key, this.chatWith}) : super(key: key) {
@@ -34,6 +35,17 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     );
   }
 
+  Widget _getReceptionStateMark(int state) {
+    switch (state) {
+      case 0: return Icon(Icons.file_upload);
+      case 1: return Icon(Icons.done);
+      case 2: return Icon(Icons.done_all);
+      case 3: return Icon(Icons.beenhere);
+      case 500: return Icon(Icons.error);
+    }
+    return Icon(Icons.sms_failed);
+  }
+
   Widget _getQuoteText(Map entry) {
     if (entry['quote_text'] == null) {
       return Container();
@@ -58,24 +70,24 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     if (anchor != null) {
       posMap[anchor] = context;
     }
+    print("BUID");
+
+    bool isOwnMessage = (entry['sender_id'] == settings.myId);
 
     return GestureDetector(
         onTap: () {
-          print(context
-              .findRenderObject()
-              .paintBounds
-              .size
-              .height);
+
         },
         child: Container(
             decoration: BoxDecoration(
-              color: entry['sender_id'] == settings.myId ? Colors.white : Color
-                  .fromRGBO(200, 250, 250, 1.0),
+              color: isOwnMessage ? Color.fromRGBO(200, 250, 250, 1.0) : Colors.white,
               border: Border.all(color: Colors.black54),
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
             ),
-            margin: entry['sender_id'] == settings.myId ? EdgeInsets.fromLTRB(
-                8.0, 0.0, 32.0, 8.0) : EdgeInsets.fromLTRB(32.0, 0.0, 8.0, 8.0),
+            margin:
+              isOwnMessage ?
+                EdgeInsets.fromLTRB(32.0, 0.0, 8.0, 8.0) :
+                EdgeInsets.fromLTRB(8.0, 0.0, 32.0, 8.0),
             padding: EdgeInsets.all(16.0),
             child:
             Stack(
@@ -92,8 +104,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                   Positioned(
                     right: 0.0,
                     bottom: 0.0,
-                    child: Text(Utils.dateFormat(entry['timestamp']),
-                        style: TextStyle(fontSize: 10.0)),
+                    child: 
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            Utils.dateFormat(entry['timestamp']),
+                            style: TextStyle(fontSize: 10.0)),
+                          isOwnMessage ? _getReceptionStateMark(entry['reception_state']): Text(''),
+                        ])
                   )
 
                 ])
@@ -103,11 +121,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
 
   @override
   Widget build(BuildContext context) {
+    var settings = Settings();
     var chatWithId = widget.chatWith['chat_id'];
-    print(chatWithId);
+    var controller = TextEditingController();
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.chatWith['title']),
+          title: Text(widget.chatWith['title']) ,
           actions: <Widget>[
             Icon(Icons.search),
             Icon(Icons.menu)
@@ -122,7 +141,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 decoration: BoxDecoration(color: Colors.black12),
                 child: DatabaseList(
                   reverse: true,
-                  query: 'select * from conversations where chat_id=$chatWithId order by timestamp desc',
+                  query: "select * from conversations where chat_id='$chatWithId' order by timestamp desc",
                   itemBuilder: (BuildContext context, Map entry, int i) {
                     return _buildRow(context, entry, i);
                   },
@@ -131,21 +150,34 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
               Container(
                 constraints: BoxConstraints.loose(Size.fromHeight(100.0)),
                 padding: EdgeInsets.all(8.0),
-                child: TextField(
+                child:
+                  TextField(
+                    controller: controller,
                   decoration: InputDecoration(
                     prefixIcon: GestureDetector(
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(0.0, 0.0, 18.0, 0.0),
                           child: Icon(Icons.insert_emoticon),
                         ),
-                      onTap:() {
-                          print('olala');
-                      },
-  
                     ),
-                    suffixIcon: Icon(Icons.camera),
+                    suffixIcon: GestureDetector(
+                      child: Icon(Icons.send),
+                      onTap: () async {
+                        if (controller.text.isEmpty) {
+                          return;
+                        }
+                        var m = Message(
+                            text: controller.text,
+                            chatId: widget.chatWith['chat_id'],
+                          senderId: settings.myId,
+                          recipientId: widget.chatWith['chat_id'],
+                        );
+                        m.send();
+                        controller.text = '';
+                        m.fetch();
+                      },
+                    ),
                     hintText: 'Type a message',
-  
                     contentPadding: EdgeInsets.all(8.0),
                   ),
                   maxLines: null,
