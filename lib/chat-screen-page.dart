@@ -2,6 +2,7 @@ library ngobrel_app.chat_screen_page;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
 import 'db.dart';
 import 'utils.dart';
 import 'settings.dart';
@@ -21,6 +22,7 @@ class ChatScreenPage extends StatefulWidget {
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
   Map<String, BuildContext> posMap = Map();
+  int lastOffset = 0;
 
   Widget _getThumbnail(Map entry) {
     if (entry['thumbnail'] == null) {
@@ -71,7 +73,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     if (anchor != null) {
       posMap[anchor] = context;
     }
-    print("BUID");
+
+    lastOffset = max(lastOffset, entry['timestamp']);
 
     bool isOwnMessage = (entry['sender_id'] == settings.myId);
 
@@ -145,7 +148,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 decoration: BoxDecoration(color: Colors.black12),
                 child: DatabaseList(
                   reverse: true,
-                  query: "select * from conversations where chat_id='$chatWithId' order by timestamp desc",
+                  append: true,
+                  query: "select * from conversations where chat_id='$chatWithId' and timestamp > $lastOffset order by timestamp desc",
                   itemBuilder: (BuildContext context, Map entry, int i) {
                     return _buildRow(context, entry, i);
                   },
@@ -178,6 +182,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         );
                         m.send();
                         controller.text = '';
+
+                        print("Sent");
+                        m.setSent(() {
+                          setState(() {
+                            print("Updated");
+                          });
+                        });
+
                       },
                     ),
                     hintText: 'Type a message',

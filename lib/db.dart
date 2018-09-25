@@ -78,8 +78,9 @@ class Db {
 
 class DatabaseList extends StatefulWidget {
 
-  DatabaseList({this.key, this.reverse: false, this.query, this.itemBuilder}) : super(key: key);
+  DatabaseList({this.key, this.append: false, this.reverse: false, this.query, this.itemBuilder}) : super(key: key);
 
+  final bool append;
   final bool reverse;
   final Key key;
   final String query;
@@ -90,7 +91,9 @@ class DatabaseList extends StatefulWidget {
 }
 
 class _DatabaseListState extends State<DatabaseList> {
-  Widget _createList(BuildContext context, List<Map> data) {
+  List<Map> data = new List<Map>();
+
+  Widget _createList(BuildContext context) {
     print('db list created');
     return ListView.builder(
         key: widget.key,
@@ -113,8 +116,17 @@ class _DatabaseListState extends State<DatabaseList> {
       default:
         if (snapshot.hasError)
           return new Text('Error: ${snapshot.error}');
-        else
-          return _createList(context, snapshot.data);
+        else {
+          if (widget.append) {
+            List<Map> temp = new List<Map>();
+            temp.addAll(snapshot.data);
+            data.insertAll(0, temp);
+            temp.clear();
+          } else {
+            data = snapshot.data;
+          }
+          return _createList(context);
+        }
     }
   }
 

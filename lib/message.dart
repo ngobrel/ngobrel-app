@@ -10,6 +10,7 @@ import 'generated/ngobrel.pbgrpc.dart';
 class MessageQueue {
 
   Queue<Message> queue;
+  Function sentFunc = null;
   static final MessageQueue _singleton = new MessageQueue._internal();
 
   factory MessageQueue() {
@@ -23,16 +24,14 @@ class MessageQueue {
   void put(final Message message)  {
     queue.add(message);
     Timer(Duration(milliseconds: 1), () async {
-      try {
-        await send();
-
-      } catch (e) {
-        print(e.toString());
-      }
+      send();
     });
   }
 
-  Future<void> send() async {
+  void setSent(Function f) {
+    sentFunc = f;
+  }
+  void send() async {
     var message = queue.removeFirst();
     var service = NgobrelService();
 
@@ -51,9 +50,18 @@ class MessageQueue {
 
     print("Error $code");
 
-    return db.update(
-        'UPDATE conversations SET reception_state = ?, message_id = ? WHERE chat_id = ? and timestamp  = ? and sender_id = ?',
-        [code, response == null ? message.timestamp : response.messageID.toInt(), message.chatId, message.timestamp, settings.myId]);
+
+    try {
+      await db.update(
+          'UPDATE conversations SET reception_state = ?, message_id = ? WHERE chat_id = ? and timestamp  = ? and sender_id = ?',
+          [code, response == null ? message.timestamp : response.messageID.toInt(), message.chatId, message.timestamp, settings.myId]);
+      print("DB Updated");
+      if (sentFunc != null) {
+        sentFunc();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
 
@@ -115,6 +123,10 @@ class Message {
     }
   }
 
+  void setSent(Function f) {
+    var queue = MessageQueue();
+    queue.setSent(f);
+  }
   void send() async {
     var queue = MessageQueue();
     _saveLocal();
