@@ -39,12 +39,12 @@ class Db {
   }
 
   void populateData(String id) async {
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-1000-0000-000000000001', 1, 1, 'Omama olala okaka orama osama obama okama olama', 'Omama', 1)");
+    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000001', 1, 1, 'Omama olala okaka orama osama obama okama olama', 'Omama', 1)");
     await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-1000-0000-000000000002', 1535293181413, 1, 'Orama Okaka Olala Osasa Oraya', 'Urara Uta Usalala', 0)");
     await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000002', 1535093181413, 1, '📷 Photo', 'Popa Piopola', 1)");
 
     var img = await rootBundle.load("assets/picsum1.jpg");
-    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-1000-0000-000000000001'");
+    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-0000-0000-000000000001'");
     img = await rootBundle.load("assets/picsum2.jpg");
     await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-1000-0000-000000000002'");
     img = await rootBundle.load("assets/picsum3.jpg");

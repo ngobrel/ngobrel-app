@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'db.dart';
 import 'utils.dart';
 import 'settings.dart';
+import 'services.dart';
 import 'message.dart';
 
 class ChatScreenPage extends StatefulWidget {
@@ -124,6 +125,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     var settings = Settings();
     var chatWithId = widget.chatWith['chat_id'];
     var controller = TextEditingController();
+    var service = NgobrelService();
+
+    print("CHAT WITH:"+chatWithId);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.chatWith['title']) ,
@@ -174,7 +178,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         );
                         m.send();
                         controller.text = '';
-                        m.fetch();
                       },
                     ),
                     hintText: 'Type a message',
