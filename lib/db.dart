@@ -1,11 +1,13 @@
 library ngobrel_app.db;
 
+import 'package:fixnum/fixnum.dart';
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
+import 'generated/ngobrel.pb.dart';
+import 'generated/ngobrel.pbgrpc.dart';
 
 class Db {
 
@@ -74,6 +76,33 @@ class Db {
   Future<int> update(String q, List<dynamic> values) => database.rawUpdate(q, values);
 
   Batch batch() => database.batch();
+
+  Future<void> saveChatList(List<Conversations> items) {
+    Batch batch = database.batch();
+    for (var item in items) {
+      var notification = 0;
+      try {
+        if (item.hasNotification()) {
+          notification = item.notification.toInt();
+        }
+      } catch (e) {
+        // empty
+      }
+      int timestamp = item.timestamp.toInt();
+
+      batch.rawQuery("""
+          replace into chat_list (chat_id, updated_at, created_at, title, notification, excerpt) 
+          values (?, ?, ?, ?, ?, ?)
+          """,
+          [item.chatID,
+           timestamp,
+           timestamp,
+           item.chatName,
+           notification,
+           item.excerpt]);
+    }
+    return batch.commit();
+  }
 }
 
 

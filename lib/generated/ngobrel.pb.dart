@@ -195,9 +195,9 @@ class Conversations extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Conversations')
     ..aOS(1, 'chatID')
     ..aOS(2, 'chatName')
-    ..aOS(3, 'avatar')
+    ..aOS(3, 'excerpt')
     ..aInt64(4, 'timestamp')
-    ..a<int>(5, 'notification', $pb.PbFieldType.O3)
+    ..aInt64(5, 'notification')
     ..hasRequiredFields = false
   ;
 
@@ -225,18 +225,18 @@ class Conversations extends $pb.GeneratedMessage {
   bool hasChatName() => $_has(1);
   void clearChatName() => clearField(2);
 
-  String get avatar => $_getS(2, '');
-  set avatar(String v) { $_setString(2, v); }
-  bool hasAvatar() => $_has(2);
-  void clearAvatar() => clearField(3);
+  String get excerpt => $_getS(2, '');
+  set excerpt(String v) { $_setString(2, v); }
+  bool hasExcerpt() => $_has(2);
+  void clearExcerpt() => clearField(3);
 
   Int64 get timestamp => $_getI64(3);
   set timestamp(Int64 v) { $_setInt64(3, v); }
   bool hasTimestamp() => $_has(3);
   void clearTimestamp() => clearField(4);
 
-  int get notification => $_get(4, 0);
-  set notification(int v) { $_setSignedInt32(4, v); }
+  Int64 get notification => $_getI64(4);
+  set notification(Int64 v) { $_setInt64(4, v); }
   bool hasNotification() => $_has(4);
   void clearNotification() => clearField(5);
 }

@@ -89,9 +89,9 @@ const Conversations$json = const {
   '2': const [
     const {'1': 'chatID', '3': 1, '4': 1, '5': 9, '10': 'chatID'},
     const {'1': 'chatName', '3': 2, '4': 1, '5': 9, '10': 'chatName'},
-    const {'1': 'avatar', '3': 3, '4': 1, '5': 9, '10': 'avatar'},
+    const {'1': 'excerpt', '3': 3, '4': 1, '5': 9, '10': 'excerpt'},
     const {'1': 'timestamp', '3': 4, '4': 1, '5': 3, '10': 'timestamp'},
-    const {'1': 'notification', '3': 5, '4': 1, '5': 5, '10': 'notification'},
+    const {'1': 'notification', '3': 5, '4': 1, '5': 3, '10': 'notification'},
   ],
 };
 

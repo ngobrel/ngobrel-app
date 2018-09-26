@@ -4,6 +4,7 @@ import 'generated/ngobrel.pb.dart';
 import 'generated/ngobrel.pbgrpc.dart';
 import 'message.dart';
 import 'settings.dart';
+import 'db.dart';
 import 'package:fixnum/fixnum.dart';
 
 class NgobrelService {
@@ -11,6 +12,7 @@ class NgobrelService {
   static final NgobrelService _singleton = new NgobrelService._internal();
 
   bool gettingMessages = false;
+  bool gettingChatList = false;
 
   factory NgobrelService() {
     return _singleton;
@@ -90,6 +92,37 @@ class NgobrelService {
       rethrow;
     }
     print("geting messages done");
+
+  }
+
+
+  Future<void> getChatList() async {
+    print("try to get chat list");
+
+    if (gettingChatList) {
+      print("there is still something getting the chat list");
+      return;
+    }
+    gettingChatList = true;
+    if (client == null) {
+      init();
+    }
+
+    print("geting chat list");
+    try {
+      Db db = Db();
+      var result = await client.listConversations(ListConversationsRequest());
+      await db.saveChatList(result.list);
+
+      gettingChatList = false;
+    } catch(e) {
+      print("Getting chat list error: " + e.toString());
+      client = null;
+      gettingChatList = false;
+
+      rethrow;
+    }
+    print("geting chat list done");
 
   }
 }
