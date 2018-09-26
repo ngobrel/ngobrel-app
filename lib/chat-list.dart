@@ -1,5 +1,6 @@
 library ngobrel_app.chat_list;
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'chat-screen-page.dart';
 import 'db.dart';
@@ -24,6 +25,27 @@ class _ChatListState extends State<ChatList> {
       );
   }
 
+  String _getInitial(String name) {
+    String result = "";
+    var words = name.split(" ");
+    for (int i = 0; i < max(2, words.length); i ++) {
+      result = result + words[i].substring(0, 1).toUpperCase();
+    }
+    return result;
+  }
+
+  Widget _getAvatar(dynamic avatar, String name) {
+    if (avatar == null) {
+      return CircleAvatar(
+        child: Text(_getInitial(name)),
+      );
+    } else {
+      return CircleAvatar(
+          backgroundImage: MemoryImage(avatar)
+      );
+    }
+  }
+
   Widget _buildRow(BuildContext context, Map entry, int index) {
     return GestureDetector(
       child: Column(
@@ -31,7 +53,7 @@ class _ChatListState extends State<ChatList> {
           ListTile(
             title: Text(entry['title'], style: TextStyle(fontWeight: FontWeight.bold),),
             trailing:
-              entry['has_notification'] == 1 ?
+              entry['notification'] > 0 ?
                 Text(Utils.dateFormat(entry['updated_at'])) :
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -40,7 +62,7 @@ class _ChatListState extends State<ChatList> {
                   Icon(Icons.volume_off)
                 ],),
             subtitle: Text(entry['excerpt'], overflow: TextOverflow.ellipsis,),
-            leading: Image.memory(entry['avatar']),
+            leading: _getAvatar(entry['avatar'], entry['title']),
           ),
 
         Divider()]

@@ -48,7 +48,7 @@ class Db {
     img = await rootBundle.load("assets/picsum2.jpg");
     await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-1000-0000-000000000002'");
     img = await rootBundle.load("assets/picsum3.jpg");
-    await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-0000-0000-000000000002'");
+    //await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-0000-0000-000000000002'");
 
     await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 1, $id, '10000000-1000-0000-0000-000000000001', 1535293181413, 'Hoi', 0, 0, 1)");
     await database.execute("insert into conversations (chat_id, message_id, sender_id, sender_device_id, timestamp, text, message_type, state, reception_state) values ('10000000-0000-0000-0000-000000000002', 2, $id, '10000000-1000-0000-0000-000000000001', 1535293281413, 'Hoi ya benar', 0, 0, 1)");
