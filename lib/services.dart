@@ -125,4 +125,16 @@ class NgobrelService {
     print("geting chat list done");
 
   }
+
+  void updateChatList(String chatID, String excerpt) async {
+    if (client == null) {
+      init();
+    }
+    var request = UpdateConversationRequest()
+    ..chatID = chatID
+    ..timestamp = Int64(DateTime.now().toUtc().millisecondsSinceEpoch)
+    ..excerpt = excerpt;
+
+    await client.updateConversation(request);
+  }
 }

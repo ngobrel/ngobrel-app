@@ -241,6 +241,76 @@ class Conversations extends $pb.GeneratedMessage {
   void clearNotification() => clearField(5);
 }
 
+class UpdateConversationRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('UpdateConversationRequest')
+    ..aOS(1, 'chatID')
+    ..aOS(2, 'excerpt')
+    ..aInt64(3, 'timestamp')
+    ..hasRequiredFields = false
+  ;
+
+  UpdateConversationRequest() : super();
+  UpdateConversationRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  UpdateConversationRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  UpdateConversationRequest clone() => new UpdateConversationRequest()..mergeFromMessage(this);
+  UpdateConversationRequest copyWith(void Function(UpdateConversationRequest) updates) => super.copyWith((message) => updates(message as UpdateConversationRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static UpdateConversationRequest create() => new UpdateConversationRequest();
+  static $pb.PbList<UpdateConversationRequest> createRepeated() => new $pb.PbList<UpdateConversationRequest>();
+  static UpdateConversationRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static UpdateConversationRequest _defaultInstance;
+  static void $checkItem(UpdateConversationRequest v) {
+    if (v is! UpdateConversationRequest) $pb.checkItemFailed(v, _i.messageName);
+  }
+
+  String get chatID => $_getS(0, '');
+  set chatID(String v) { $_setString(0, v); }
+  bool hasChatID() => $_has(0);
+  void clearChatID() => clearField(1);
+
+  String get excerpt => $_getS(1, '');
+  set excerpt(String v) { $_setString(1, v); }
+  bool hasExcerpt() => $_has(1);
+  void clearExcerpt() => clearField(2);
+
+  Int64 get timestamp => $_getI64(2);
+  set timestamp(Int64 v) { $_setInt64(2, v); }
+  bool hasTimestamp() => $_has(2);
+  void clearTimestamp() => clearField(3);
+}
+
+class UpdateConversationResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('UpdateConversationResponse')
+    ..aOB(1, 'success')
+    ..aOS(2, 'message')
+    ..hasRequiredFields = false
+  ;
+
+  UpdateConversationResponse() : super();
+  UpdateConversationResponse.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  UpdateConversationResponse.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  UpdateConversationResponse clone() => new UpdateConversationResponse()..mergeFromMessage(this);
+  UpdateConversationResponse copyWith(void Function(UpdateConversationResponse) updates) => super.copyWith((message) => updates(message as UpdateConversationResponse));
+  $pb.BuilderInfo get info_ => _i;
+  static UpdateConversationResponse create() => new UpdateConversationResponse();
+  static $pb.PbList<UpdateConversationResponse> createRepeated() => new $pb.PbList<UpdateConversationResponse>();
+  static UpdateConversationResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static UpdateConversationResponse _defaultInstance;
+  static void $checkItem(UpdateConversationResponse v) {
+    if (v is! UpdateConversationResponse) $pb.checkItemFailed(v, _i.messageName);
+  }
+
+  bool get success => $_get(0, false);
+  set success(bool v) { $_setBool(0, v); }
+  bool hasSuccess() => $_has(0);
+  void clearSuccess() => clearField(1);
+
+  String get message => $_getS(1, '');
+  set message(String v) { $_setString(1, v); }
+  bool hasMessage() => $_has(1);
+  void clearMessage() => clearField(2);
+}
+
 class DeleteContactRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DeleteContactRequest')
     ..aOS(1, 'userID')

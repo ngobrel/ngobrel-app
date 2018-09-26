@@ -65,6 +65,7 @@ class MessageQueue {
       }, where: "chat_id=?", whereArgs: [message.chatId]);
       await batch.commit();
       print("DB Updated");
+      service.updateChatList(message.chatId, message.excerpt());
       if (sentFunc != null) {
         sentFunc();
       }

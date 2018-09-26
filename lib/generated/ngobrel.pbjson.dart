@@ -95,6 +95,23 @@ const Conversations$json = const {
   ],
 };
 
+const UpdateConversationRequest$json = const {
+  '1': 'UpdateConversationRequest',
+  '2': const [
+    const {'1': 'chatID', '3': 1, '4': 1, '5': 9, '10': 'chatID'},
+    const {'1': 'excerpt', '3': 2, '4': 1, '5': 9, '10': 'excerpt'},
+    const {'1': 'timestamp', '3': 3, '4': 1, '5': 3, '10': 'timestamp'},
+  ],
+};
+
+const UpdateConversationResponse$json = const {
+  '1': 'UpdateConversationResponse',
+  '2': const [
+    const {'1': 'success', '3': 1, '4': 1, '5': 8, '10': 'success'},
+    const {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
+  ],
+};
+
 const DeleteContactRequest$json = const {
   '1': 'DeleteContactRequest',
   '2': const [

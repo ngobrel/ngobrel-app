@@ -33,6 +33,12 @@ class NgobrelClient extends Client {
           '/Ngobrel/ListConversations',
           (ListConversationsRequest value) => value.writeToBuffer(),
           (List<int> value) => new ListConversationsResponse.fromBuffer(value));
+  static final _$updateConversation =
+      new ClientMethod<UpdateConversationRequest, UpdateConversationResponse>(
+          '/Ngobrel/UpdateConversation',
+          (UpdateConversationRequest value) => value.writeToBuffer(),
+          (List<int> value) =>
+              new UpdateConversationResponse.fromBuffer(value));
   static final _$getContacts =
       new ClientMethod<GetContactsRequest, GetContactsResponse>(
           '/Ngobrel/GetContacts',
@@ -71,6 +77,15 @@ class NgobrelClient extends Client {
       {CallOptions options}) {
     final call = $createCall(
         _$listConversations, new Stream.fromIterable([request]),
+        options: options);
+    return new ResponseFuture(call);
+  }
+
+  ResponseFuture<UpdateConversationResponse> updateConversation(
+      UpdateConversationRequest request,
+      {CallOptions options}) {
+    final call = $createCall(
+        _$updateConversation, new Stream.fromIterable([request]),
         options: options);
     return new ResponseFuture(call);
   }
@@ -117,6 +132,14 @@ abstract class NgobrelServiceBase extends Service {
             false,
             (List<int> value) => new ListConversationsRequest.fromBuffer(value),
             (ListConversationsResponse value) => value.writeToBuffer()));
+    $addMethod(new ServiceMethod<UpdateConversationRequest,
+            UpdateConversationResponse>(
+        'UpdateConversation',
+        updateConversation_Pre,
+        false,
+        false,
+        (List<int> value) => new UpdateConversationRequest.fromBuffer(value),
+        (UpdateConversationResponse value) => value.writeToBuffer()));
     $addMethod(new ServiceMethod<GetContactsRequest, GetContactsResponse>(
         'GetContacts',
         getContacts_Pre,
@@ -146,6 +169,11 @@ abstract class NgobrelServiceBase extends Service {
     return listConversations(call, await request);
   }
 
+  Future<UpdateConversationResponse> updateConversation_Pre(
+      ServiceCall call, Future request) async {
+    return updateConversation(call, await request);
+  }
+
   Future<GetContactsResponse> getContacts_Pre(
       ServiceCall call, Future request) async {
     return getContacts(call, await request);
@@ -159,6 +187,8 @@ abstract class NgobrelServiceBase extends Service {
       ServiceCall call, CreateConversationRequest request);
   Future<ListConversationsResponse> listConversations(
       ServiceCall call, ListConversationsRequest request);
+  Future<UpdateConversationResponse> updateConversation(
+      ServiceCall call, UpdateConversationRequest request);
   Future<GetContactsResponse> getContacts(
       ServiceCall call, GetContactsRequest request);
 }
