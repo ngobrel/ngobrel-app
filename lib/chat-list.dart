@@ -54,12 +54,17 @@ class _ChatListState extends State<ChatList> {
             title: Text(entry['title'], style: TextStyle(fontWeight: FontWeight.bold),),
             trailing:
               entry['notification'] > 0 ?
-                Text(Utils.dateFormat(entry['updated_at'])) :
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(Utils.dateFormat(entry['updated_at']), style: TextStyle(fontSize: 12.0),)
+                  ])
+              :
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                  Text(Utils.dateFormat(entry['updated_at'])),
-                  Icon(Icons.volume_off)
+                  Text(Utils.dateFormat(entry['updated_at']), style: TextStyle(fontSize: 12.0),),
+                  Icon(Icons.volume_off, size: 15.0,)
                 ],),
             subtitle: Text(entry['excerpt'], overflow: TextOverflow.ellipsis,),
             leading: _getAvatar(entry['avatar'], entry['title']),
