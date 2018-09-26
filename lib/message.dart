@@ -109,7 +109,6 @@ class Message {
   Future<void>_saveLocal() async {
     var db = Db();
 
-    print([messageId, chatId, senderId, timestamp, text, thumbnail, quote_text, quote_thumbnail, message_type, state, reception_state]);
     try {
       await db.insert(
           "insert into conversations (message_id, chat_id, sender_id, timestamp, text, thumbnail, quote_text, quote_thumbnail, message_type, state, reception_state) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -168,6 +167,9 @@ class Message {
   }
 
   String excerpt() {
+    if (thumbnail != null) {
+      return "📷 Photo";
+    }
     int size = text.length > 50 ? 50 : text.length;
     return text.substring(0, size);
   }
