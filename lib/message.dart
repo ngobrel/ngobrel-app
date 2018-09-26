@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
+import 'dart:math';
 import 'services.dart';
 import 'db.dart';
 import 'dart:collection';
@@ -52,9 +53,17 @@ class MessageQueue {
 
 
     try {
-      await db.update(
-          'UPDATE conversations SET reception_state = ?, message_id = ? WHERE chat_id = ? and timestamp  = ? and sender_id = ?',
-          [code, response == null ? message.timestamp : response.messageID.toInt(), message.chatId, message.timestamp, settings.myId]);
+      var batch = db.batch();
+      batch.update("conversations", {
+        "reception_state": code,
+        "message_id": response == null ? message.timestamp : response.messageID.toInt()
+      }, where: "chat_id = ? and timestamp  = ? and sender_id = ?",
+          whereArgs: [message.chatId, message.timestamp, settings.myId]);
+      batch.update("chat_list", {
+        "updated_at": message.timestamp,
+        "excerpt": message.excerpt()
+      }, where: "chat_id=?", whereArgs: [message.chatId]);
+      await batch.commit();
       print("DB Updated");
       if (sentFunc != null) {
         sentFunc();
@@ -71,7 +80,7 @@ class Message {
   var recipientId;
   var messageId;
   int timestamp;
-  var text;
+  String text;
   var thumbnail;
   var quote_text;
   var quote_thumbnail;
@@ -155,6 +164,11 @@ class Message {
 
   void _parseContents(String text) {
     // TODO
-    this.text = text + "-Omama";
+    this.text = text;
+  }
+
+  String excerpt() {
+    int size = text.length > 50 ? 50 : text.length;
+    return text.substring(0, size);
   }
 }

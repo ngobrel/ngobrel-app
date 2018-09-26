@@ -73,6 +73,7 @@ class Db {
   Future<void> insert(String q, List<dynamic> values) => database.rawInsert(q, values);
   Future<int> update(String q, List<dynamic> values) => database.rawUpdate(q, values);
 
+  Batch batch() => database.batch();
 }
 
 
