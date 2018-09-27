@@ -30,19 +30,23 @@ class NgobrelService {
 
   void init() {
     print("Setting up services");
-    final channel = ClientChannel('10.0.2.2',
-        port: 8000,
-        options: const ChannelOptions(
-            credentials: const ChannelCredentials.insecure()));
-    metadata.putIfAbsent("device-id",() => settings.myDeviceId);
-    metadata.putIfAbsent("user-id",() => settings.myId);
+    try {
+      final channel = ClientChannel('10.0.2.2',
+          port: 8000,
+          options: const ChannelOptions(
+              credentials: const ChannelCredentials.insecure()));
+      metadata.putIfAbsent("device-id", () => settings.myDeviceId);
+      metadata.putIfAbsent("user-id", () => settings.myId);
 
-    client = NgobrelClient(channel, options: CallOptions(metadata: metadata));
+      client = NgobrelClient(channel, options: CallOptions(metadata: metadata));
 
-    if (timer == null) {
-      timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
-        getMessages();
-      });
+      if (timer == null) {
+        timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+          getMessages();
+        });
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -160,11 +164,29 @@ class NgobrelService {
     if (client == null) {
       init();
     }
-    var request = UpdateConversationRequest()
+    final request = UpdateConversationRequest()
     ..chatID = chatID
     ..timestamp = Int64(DateTime.now().toUtc().millisecondsSinceEpoch)
     ..excerpt = excerpt;
 
     await client.updateConversation(request);
+  }
+
+
+  Future<String> registerUser(String phoneNumber, String deviceID) async {
+    if (client == null) {
+      init();
+    }
+
+    print("Registering");
+
+    final request = new CreateProfileRequest()
+    ..deviceID = deviceID
+    ..phoneNumber = phoneNumber
+    ;
+
+    print(request);
+    var res = await client.createProfile(request);
+    return res.userID;
   }
 }

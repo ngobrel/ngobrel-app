@@ -14,6 +14,64 @@ import 'ngobrel.pbenum.dart';
 
 export 'ngobrel.pbenum.dart';
 
+class CreateProfileRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('CreateProfileRequest')
+    ..aOS(1, 'deviceID')
+    ..aOS(2, 'phoneNumber')
+    ..hasRequiredFields = false
+  ;
+
+  CreateProfileRequest() : super();
+  CreateProfileRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CreateProfileRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CreateProfileRequest clone() => new CreateProfileRequest()..mergeFromMessage(this);
+  CreateProfileRequest copyWith(void Function(CreateProfileRequest) updates) => super.copyWith((message) => updates(message as CreateProfileRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static CreateProfileRequest create() => new CreateProfileRequest();
+  static $pb.PbList<CreateProfileRequest> createRepeated() => new $pb.PbList<CreateProfileRequest>();
+  static CreateProfileRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static CreateProfileRequest _defaultInstance;
+  static void $checkItem(CreateProfileRequest v) {
+    if (v is! CreateProfileRequest) $pb.checkItemFailed(v, _i.messageName);
+  }
+
+  String get deviceID => $_getS(0, '');
+  set deviceID(String v) { $_setString(0, v); }
+  bool hasDeviceID() => $_has(0);
+  void clearDeviceID() => clearField(1);
+
+  String get phoneNumber => $_getS(1, '');
+  set phoneNumber(String v) { $_setString(1, v); }
+  bool hasPhoneNumber() => $_has(1);
+  void clearPhoneNumber() => clearField(2);
+}
+
+class CreateProfileResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('CreateProfileResponse')
+    ..aOS(1, 'userID')
+    ..hasRequiredFields = false
+  ;
+
+  CreateProfileResponse() : super();
+  CreateProfileResponse.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CreateProfileResponse.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CreateProfileResponse clone() => new CreateProfileResponse()..mergeFromMessage(this);
+  CreateProfileResponse copyWith(void Function(CreateProfileResponse) updates) => super.copyWith((message) => updates(message as CreateProfileResponse));
+  $pb.BuilderInfo get info_ => _i;
+  static CreateProfileResponse create() => new CreateProfileResponse();
+  static $pb.PbList<CreateProfileResponse> createRepeated() => new $pb.PbList<CreateProfileResponse>();
+  static CreateProfileResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static CreateProfileResponse _defaultInstance;
+  static void $checkItem(CreateProfileResponse v) {
+    if (v is! CreateProfileResponse) $pb.checkItemFailed(v, _i.messageName);
+  }
+
+  String get userID => $_getS(0, '');
+  set userID(String v) { $_setString(0, v); }
+  bool hasUserID() => $_has(0);
+  void clearUserID() => clearField(1);
+}
+
 class EditProfileRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = new $pb.BuilderInfo('EditProfileRequest')
     ..aOS(1, 'name')

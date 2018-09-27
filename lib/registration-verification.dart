@@ -4,6 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'db.dart';
 import 'settings.dart';
+import 'services.dart';
+import 'package:device_id/device_id.dart';
+import 'package:uuid/uuid.dart';
 
 class RegistrationVerification extends StatefulWidget {
   RegistrationVerification({Key key, this.phoneNumber}) : super(key: key);
@@ -17,6 +20,8 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
 
   final _formKey = GlobalKey<FormState>();
   bool _formWasEdited = false;
+  bool buttonsEnabled = true;
+  bool showProgress = false;
   String _verificationText;
 
   String _validateVerificationText(String value) {
@@ -53,15 +58,52 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
     );
   }
 
+  void changeNumber() {
+    if (_formKey.currentState.validate()) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void startVerify() {
+    if (_formKey.currentState.validate()) {
+      _verify();
+    }
+  }
+
+  Future<String> _getDeviceID() async {
+    return DeviceId.getID;
+  }
+
   void _verify() async {
+    showProgress = true;
+    buttonsEnabled = false;
+    setState(() {
+
+    });
     if (_verificationText != '1234') {
       _verificationFailed();
     } else {
-      var db = Db();
-      db.populateData('10000000-0000-0000-0000-000000000001');
-      var settings = Settings();
-      settings.myId = '10000000-0000-0000-0000-000000000001';
-      Navigator.pushNamedAndRemoveUntil(context, "/chatList", (Route<dynamic> route) => false);
+      NgobrelService service = NgobrelService();
+      String deviceID = await _getDeviceID();
+      var uuid = Uuid();
+      deviceID = uuid.unparse(uuid.parse(deviceID));
+      print(deviceID);
+      print("registering" + widget.phoneNumber);
+
+      var reg = service.registerUser(widget.phoneNumber, deviceID);
+      reg.then((value) async {
+        print("registered as" + value);
+        var db = Db();
+        var settings = Settings();
+        settings.setIds(value, deviceID);
+
+        await db.populateData(value);
+        Navigator.pushNamedAndRemoveUntil(context, "/chatList", (Route<dynamic> route) => false);
+      }).catchError((e) {
+        print("Error");
+        print(e);
+      });
+
     }
   }
 
@@ -103,26 +145,20 @@ class _RegistrationVerificationState extends State<RegistrationVerification> {
 
                 children: <Widget>[
                   RaisedButton(
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
+                    onPressed: buttonsEnabled ? changeNumber : null,
                     child: Text('CHANGE NUMBER'),
                   ),
 
                   RaisedButton(
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        _verify();
-                      }
-                    },
+                    onPressed: buttonsEnabled ? startVerify : null,
                     child: Text('VERIFY'),
                   ),
+                  Opacity(
+                    opacity: showProgress == true ? 1.0 : 0.0,
+                    child: CircularProgressIndicator(
+                      value: null,
+                    )
+                  )
                 ],
               ),
             )

@@ -44,6 +44,11 @@ class NgobrelClient extends Client {
           '/Ngobrel/GetContacts',
           (GetContactsRequest value) => value.writeToBuffer(),
           (List<int> value) => new GetContactsResponse.fromBuffer(value));
+  static final _$createProfile =
+      new ClientMethod<CreateProfileRequest, CreateProfileResponse>(
+          '/Ngobrel/CreateProfile',
+          (CreateProfileRequest value) => value.writeToBuffer(),
+          (List<int> value) => new CreateProfileResponse.fromBuffer(value));
 
   NgobrelClient(ClientChannel channel, {CallOptions options})
       : super(channel, options: options);
@@ -93,6 +98,15 @@ class NgobrelClient extends Client {
   ResponseFuture<GetContactsResponse> getContacts(GetContactsRequest request,
       {CallOptions options}) {
     final call = $createCall(_$getContacts, new Stream.fromIterable([request]),
+        options: options);
+    return new ResponseFuture(call);
+  }
+
+  ResponseFuture<CreateProfileResponse> createProfile(
+      CreateProfileRequest request,
+      {CallOptions options}) {
+    final call = $createCall(
+        _$createProfile, new Stream.fromIterable([request]),
         options: options);
     return new ResponseFuture(call);
   }
@@ -147,6 +161,13 @@ abstract class NgobrelServiceBase extends Service {
         false,
         (List<int> value) => new GetContactsRequest.fromBuffer(value),
         (GetContactsResponse value) => value.writeToBuffer()));
+    $addMethod(new ServiceMethod<CreateProfileRequest, CreateProfileResponse>(
+        'CreateProfile',
+        createProfile_Pre,
+        false,
+        false,
+        (List<int> value) => new CreateProfileRequest.fromBuffer(value),
+        (CreateProfileResponse value) => value.writeToBuffer()));
   }
 
   Future<PutMessageResponse> putMessage_Pre(
@@ -179,6 +200,11 @@ abstract class NgobrelServiceBase extends Service {
     return getContacts(call, await request);
   }
 
+  Future<CreateProfileResponse> createProfile_Pre(
+      ServiceCall call, Future request) async {
+    return createProfile(call, await request);
+  }
+
   Future<PutMessageResponse> putMessage(
       ServiceCall call, PutMessageRequest request);
   Stream<GetMessagesResponseItem> getMessages(
@@ -191,4 +217,6 @@ abstract class NgobrelServiceBase extends Service {
       ServiceCall call, UpdateConversationRequest request);
   Future<GetContactsResponse> getContacts(
       ServiceCall call, GetContactsRequest request);
+  Future<CreateProfileResponse> createProfile(
+      ServiceCall call, CreateProfileRequest request);
 }

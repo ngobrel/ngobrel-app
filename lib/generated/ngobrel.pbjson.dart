@@ -40,6 +40,21 @@ const UploadMediaStatus$json = const {
   ],
 };
 
+const CreateProfileRequest$json = const {
+  '1': 'CreateProfileRequest',
+  '2': const [
+    const {'1': 'deviceID', '3': 1, '4': 1, '5': 9, '10': 'deviceID'},
+    const {'1': 'phoneNumber', '3': 2, '4': 1, '5': 9, '10': 'phoneNumber'},
+  ],
+};
+
+const CreateProfileResponse$json = const {
+  '1': 'CreateProfileResponse',
+  '2': const [
+    const {'1': 'userID', '3': 1, '4': 1, '5': 9, '10': 'userID'},
+  ],
+};
+
 const EditProfileRequest$json = const {
   '1': 'EditProfileRequest',
   '2': const [
