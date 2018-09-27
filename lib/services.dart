@@ -28,6 +28,12 @@ class NgobrelService {
   Settings settings = Settings();
   Timer timer = null;
 
+  void _updateMetadata() {
+    metadata.update("device-id", (String s) => settings.myDeviceId);
+    metadata.update("user-id", (String s) => settings.myId);
+
+  }
+
   void init() {
     print("Setting up services");
     try {
@@ -51,6 +57,7 @@ class NgobrelService {
   }
 
   ResponseFuture<PutMessageResponse> putMessage(Message message) {
+    _updateMetadata();
     print("Put message to service");
     if (client == null) {
       init();
@@ -63,7 +70,7 @@ class NgobrelService {
             ..messageTimestamp = Int64(message.timestamp~/1000.0)
             ..messageContents = message.text
             ..messageEncrypted = false
-      );
+      , options: CallOptions(metadata: metadata));
     } catch(e) {
       client = null;
       rethrow;
@@ -71,6 +78,7 @@ class NgobrelService {
   }
 
   Future<void> getMessages() async {
+    _updateMetadata();
     print("try to get messages");
 
     if (gettingMessages) {
@@ -84,7 +92,7 @@ class NgobrelService {
 
     print("geting messages");
     try {
-      var result = client.getMessages(GetMessagesRequest());
+      var result = client.getMessages(GetMessagesRequest(), options: CallOptions(metadata: metadata));
       await for (var item in result) {
         print("item");
         print(item.messageID);
@@ -101,6 +109,7 @@ class NgobrelService {
   }
 
   Future<void> getChatList() async {
+    _updateMetadata();
     print("try to get chat list");
 
     if (gettingChatList) {
@@ -115,7 +124,7 @@ class NgobrelService {
     print("geting chat list");
     try {
       Db db = Db();
-      var result = await client.listConversations(ListConversationsRequest());
+      var result = await client.listConversations(ListConversationsRequest(), options: CallOptions(metadata: metadata));
       await db.saveChatList(result.list);
 
       gettingChatList = false;
@@ -131,6 +140,7 @@ class NgobrelService {
   }
 
   Future<void> getContacts() async {
+    _updateMetadata();
     print("try to get contacts");
 
     if (gettingContacts) {
@@ -145,7 +155,7 @@ class NgobrelService {
     print("getting contacts");
     try {
       Db db = Db();
-      var result = await client.getContacts(GetContactsRequest());
+      var result = await client.getContacts(GetContactsRequest(), options: CallOptions(metadata: metadata));
       await db.saveContacts(result.list);
 
       gettingContacts = false;
@@ -161,6 +171,7 @@ class NgobrelService {
   }
 
   void updateChatList(String chatID, String excerpt) async {
+    _updateMetadata();
     if (client == null) {
       init();
     }
@@ -169,7 +180,7 @@ class NgobrelService {
     ..timestamp = Int64(DateTime.now().toUtc().millisecondsSinceEpoch)
     ..excerpt = excerpt;
 
-    await client.updateConversation(request);
+    await client.updateConversation(request, options: CallOptions(metadata: metadata));
   }
 
 
