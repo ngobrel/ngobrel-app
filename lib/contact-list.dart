@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'db.dart';
 import 'services.dart';
 import 'utils.dart';
+import 'chat-screen-page.dart';
 
 class ContactListStaticItem extends StatefulWidget {
   ContactListStaticItem({String this.title, this.icon, this.list});
@@ -20,26 +21,10 @@ class ContactListStaticItem extends StatefulWidget {
 class _ContactListStaticItemState extends State<ContactListStaticItem> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-            children: [
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Utils.getAvatar(null, widget.title),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                      child: Text(widget.title),
-                    ),
-                  ],
-                ),
-              ),
-            ]
-        )
+    return ListTile(
+      leading: Utils.getAvatar(null, widget.title),
+      title: Text(widget.title)
     );
-
   }
 }
 
@@ -174,18 +159,34 @@ class _ContactListState extends State<ContactList> {
     var img = Icon(Icons.add);
 
     print(entry);
+    Widget item;
     if (!widget._selectable) {
-      return ContactListStaticItem(
+      item = ContactListStaticItem(
           title: entry['name'],
           icon: null,);
     } else {
-      return ContactListItem(
+      item = ContactListItem(
         title: entry['name'],
         icon: null,
         onRemoved: widget.onRemoved,
         onSelected: widget.onSelected,
       );
     }
+    return GestureDetector(
+      child: Column(
+        children: <Widget>[
+
+          item,
+          Divider()
+          ]
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChatScreenPage(chatWith: entry)),
+        );
+      },
+    );
   }
 
   @override

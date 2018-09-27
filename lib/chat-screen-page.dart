@@ -131,9 +131,17 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     var service = NgobrelService();
 
     print("CHAT WITH:"+chatWithId);
+    var title;
+    if (widget.chatWith.containsKey('title')) {
+      title = widget.chatWith['title'];
+    }
+    else if (widget.chatWith.containsKey('name')) {
+      title = widget.chatWith['name'];
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.chatWith['title']) ,
+          title: Text(title) ,
           actions: <Widget>[
             Icon(Icons.search),
             Icon(Icons.menu)
