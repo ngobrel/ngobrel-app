@@ -4,6 +4,15 @@
 ///
 // ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
 
+const PutContactStatus$json = const {
+  '1': 'PutContactStatus',
+  '2': const [
+    const {'1': 'Success', '2': 0},
+    const {'1': 'GeneralError', '2': 1},
+    const {'1': 'ContactIsNotInTheSystem', '2': 2},
+  ],
+};
+
 const ConversationType$json = const {
   '1': 'ConversationType',
   '2': const [
@@ -165,6 +174,7 @@ const Contacts$json = const {
 const PutContactRequest$json = const {
   '1': 'PutContactRequest',
   '2': const [
+    const {'1': 'phoneNumber', '3': 1, '4': 1, '5': 9, '10': 'phoneNumber'},
     const {'1': 'contactData', '3': 2, '4': 1, '5': 11, '6': '.Contacts', '10': 'contactData'},
   ],
 };
@@ -172,7 +182,7 @@ const PutContactRequest$json = const {
 const PutContactResponse$json = const {
   '1': 'PutContactResponse',
   '2': const [
-    const {'1': 'success', '3': 1, '4': 1, '5': 8, '10': 'success'},
+    const {'1': 'status', '3': 1, '4': 1, '5': 14, '6': '.PutContactStatus', '10': 'status'},
     const {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
   ],
 };

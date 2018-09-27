@@ -19,6 +19,9 @@ class Utils {
   static String _getInitials(String name) {
     String result = "";
     var words = name.split(" ");
+    if (words.length == 1) {
+      return name.substring(0, 1).toUpperCase();
+    }
     for (int i = 0; i < max(2, words.length); i ++) {
       result = result + words[i].substring(0, 1).toUpperCase();
     }

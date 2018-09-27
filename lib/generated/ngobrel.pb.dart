@@ -510,6 +510,7 @@ class Contacts extends $pb.GeneratedMessage {
 
 class PutContactRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = new $pb.BuilderInfo('PutContactRequest')
+    ..aOS(1, 'phoneNumber')
     ..a<Contacts>(2, 'contactData', $pb.PbFieldType.OM, Contacts.getDefault, Contacts.create)
     ..hasRequiredFields = false
   ;
@@ -528,15 +529,20 @@ class PutContactRequest extends $pb.GeneratedMessage {
     if (v is! PutContactRequest) $pb.checkItemFailed(v, _i.messageName);
   }
 
-  Contacts get contactData => $_getN(0);
+  String get phoneNumber => $_getS(0, '');
+  set phoneNumber(String v) { $_setString(0, v); }
+  bool hasPhoneNumber() => $_has(0);
+  void clearPhoneNumber() => clearField(1);
+
+  Contacts get contactData => $_getN(1);
   set contactData(Contacts v) { setField(2, v); }
-  bool hasContactData() => $_has(0);
+  bool hasContactData() => $_has(1);
   void clearContactData() => clearField(2);
 }
 
 class PutContactResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = new $pb.BuilderInfo('PutContactResponse')
-    ..aOB(1, 'success')
+    ..e<PutContactStatus>(1, 'status', $pb.PbFieldType.OE, PutContactStatus.Success, PutContactStatus.valueOf, PutContactStatus.values)
     ..aOS(2, 'message')
     ..hasRequiredFields = false
   ;
@@ -555,10 +561,10 @@ class PutContactResponse extends $pb.GeneratedMessage {
     if (v is! PutContactResponse) $pb.checkItemFailed(v, _i.messageName);
   }
 
-  bool get success => $_get(0, false);
-  set success(bool v) { $_setBool(0, v); }
-  bool hasSuccess() => $_has(0);
-  void clearSuccess() => clearField(1);
+  PutContactStatus get status => $_getN(0);
+  set status(PutContactStatus v) { setField(1, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
 
   String get message => $_getS(1, '');
   set message(String v) { $_setString(1, v); }

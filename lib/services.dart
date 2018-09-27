@@ -200,4 +200,15 @@ class NgobrelService {
     var res = await client.createProfile(request);
     return res.userID;
   }
+
+  ResponseFuture<PutContactResponse> putContact(String phoneNumber, String name)  {
+    final contact = Contacts()
+    ..name = name;
+
+    final request = PutContactRequest()
+      ..contactData = contact
+      ..phoneNumber = phoneNumber
+    ;
+    return client.putContact(request);
+  }
 }

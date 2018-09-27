@@ -8,6 +8,26 @@
 import 'dart:core' show int, dynamic, String, List, Map;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class PutContactStatus extends $pb.ProtobufEnum {
+  static const PutContactStatus Success = const PutContactStatus._(0, 'Success');
+  static const PutContactStatus GeneralError = const PutContactStatus._(1, 'GeneralError');
+  static const PutContactStatus ContactIsNotInTheSystem = const PutContactStatus._(2, 'ContactIsNotInTheSystem');
+
+  static const List<PutContactStatus> values = const <PutContactStatus> [
+    Success,
+    GeneralError,
+    ContactIsNotInTheSystem,
+  ];
+
+  static final Map<int, dynamic> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static PutContactStatus valueOf(int value) => _byValue[value] as PutContactStatus;
+  static void $checkItem(PutContactStatus v) {
+    if (v is! PutContactStatus) $pb.checkItemFailed(v, 'PutContactStatus');
+  }
+
+  const PutContactStatus._(int v, String n) : super(v, n);
+}
+
 class ConversationType extends $pb.ProtobufEnum {
   static const ConversationType PeerToPeer = const ConversationType._(0, 'PeerToPeer');
   static const ConversationType Group = const ConversationType._(1, 'Group');
