@@ -414,8 +414,9 @@ class GetContactsResponse extends $pb.GeneratedMessage {
 
 class Contacts extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Contacts')
-    ..aOS(1, 'userID')
+    ..aOS(1, 'peerID')
     ..aOS(2, 'name')
+    ..aInt64(3, 'notification')
     ..hasRequiredFields = false
   ;
 
@@ -433,15 +434,20 @@ class Contacts extends $pb.GeneratedMessage {
     if (v is! Contacts) $pb.checkItemFailed(v, _i.messageName);
   }
 
-  String get userID => $_getS(0, '');
-  set userID(String v) { $_setString(0, v); }
-  bool hasUserID() => $_has(0);
-  void clearUserID() => clearField(1);
+  String get peerID => $_getS(0, '');
+  set peerID(String v) { $_setString(0, v); }
+  bool hasPeerID() => $_has(0);
+  void clearPeerID() => clearField(1);
 
   String get name => $_getS(1, '');
   set name(String v) { $_setString(1, v); }
   bool hasName() => $_has(1);
   void clearName() => clearField(2);
+
+  Int64 get notification => $_getI64(2);
+  set notification(Int64 v) { $_setInt64(2, v); }
+  bool hasNotification() => $_has(2);
+  void clearNotification() => clearField(3);
 }
 
 class PutContactRequest extends $pb.GeneratedMessage {

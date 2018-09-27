@@ -42,26 +42,6 @@ class _ChatListState extends State<ChatList> {
       );
   }
 
-  String _getInitial(String name) {
-    String result = "";
-    var words = name.split(" ");
-    for (int i = 0; i < max(2, words.length); i ++) {
-      result = result + words[i].substring(0, 1).toUpperCase();
-    }
-    return result;
-  }
-
-  Widget _getAvatar(dynamic avatar, String name) {
-    if (avatar == null) {
-      return CircleAvatar(
-        child: Text(_getInitial(name)),
-      );
-    } else {
-      return CircleAvatar(
-          backgroundImage: MemoryImage(avatar)
-      );
-    }
-  }
 
   Widget _buildRow(BuildContext context, Map entry, int index) {
     return GestureDetector(
@@ -84,7 +64,7 @@ class _ChatListState extends State<ChatList> {
                   Icon(Icons.notifications_off, size: 15.0,)
                 ],),
             subtitle: Text(entry['excerpt'], overflow: TextOverflow.ellipsis,),
-            leading: _getAvatar(entry['avatar'], entry['title']),
+            leading: Utils.getAvatar(entry['avatar'], entry['title']),
           ),
 
         Divider()]

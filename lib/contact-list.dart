@@ -2,7 +2,9 @@ library ngobrel_app.contact_list;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-
+import 'db.dart';
+import 'services.dart';
+import 'utils.dart';
 
 class ContactListStaticItem extends StatefulWidget {
   ContactListStaticItem({String this.title, this.icon, this.list});
@@ -19,14 +21,14 @@ class _ContactListStaticItemState extends State<ContactListStaticItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
             children: [
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.icon == null ? Icon(Icons.person) : Image.memory(widget.icon),
+                    Utils.getAvatar(null, widget.title),
                     Container(
                       padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                       child: Text(widget.title),
@@ -45,7 +47,7 @@ class ContactListItem extends StatefulWidget {
   ContactListItem({String this.title, this.icon, this.onSelected, this.onRemoved});
 
   final String title;
-  final Uint8List icon;
+  final Widget icon;
   final Function(String) onSelected;
   final Function(String) onRemoved;
 
@@ -84,7 +86,7 @@ class _ContactListItemState extends State<ContactListItem> {
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          widget.icon == null ? Icon(Icons.person) : Image.memory(widget.icon),
+                          Utils.getAvatar(null, widget.title),
                           Container(
                             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                             child: Text(widget.title),
@@ -120,10 +122,22 @@ class ContactList extends StatefulWidget {
 
 class _ContactListState extends State<ContactList> {
 
+  _ContactListState() {
+    _init();
+  }
+  void _init() async {
+    NgobrelService service = NgobrelService();
+    await service.getContacts();
+    setState(() {
+
+    });
+  }
+
   void _createNewGroup() {
     Navigator.pushNamed(context, '/group/new/step1');
   }
 
+  /*
   Widget _buildContactPredefinedList() {
     print(widget.list.length);
     return ListView.builder(
@@ -133,25 +147,16 @@ class _ContactListState extends State<ContactList> {
           final index = i ~/ 2;
           return _buildRow(widget.list.elementAt(index));
         });
-  }
-  
-  Widget _buildContactList() {
-    return ListView.builder(
+  }*/
 
-        itemBuilder: (context, i) {
-          if (widget._enableNewGroup && i == 0) {
-            return _buildTopRow('New Group', _createNewGroup);
-          }
-          // Add a one-pixel-high divider widget before each row in theListView.
-          if (widget._enableNewGroup && i == 1) {
-            return Divider(color: Colors.red, );
-          }
-          if (i.isOdd) return Divider();
-
-          final index = i ~/ 2;
-
-          return _buildRow('Olalaa $index');
-        });
+  Widget _buildContactList()  {
+    return
+      DatabaseList(
+        query: 'select * from contacts order by name desc',
+        itemBuilder: (BuildContext context, Map entry, int i) {
+          return _buildRow(context, entry, i);
+        },
+      );
   }
 
   Widget _buildTopRow(String text, Function f) {
@@ -164,16 +169,18 @@ class _ContactListState extends State<ContactList> {
     );
   }
 
-  Widget _buildRow(String text) {
+
+  Widget _buildRow(BuildContext context, Map entry, int i) {
     var img = Icon(Icons.add);
 
+    print(entry);
     if (!widget._selectable) {
       return ContactListStaticItem(
-          title: text,
+          title: entry['name'],
           icon: null,);
     } else {
       return ContactListItem(
-        title: text,
+        title: entry['name'],
         icon: null,
         onRemoved: widget.onRemoved,
         onSelected: widget.onSelected,
@@ -183,10 +190,10 @@ class _ContactListState extends State<ContactList> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.list != null) {
-      return _buildContactPredefinedList();
-    } else {
+    //if (widget.list != null) {
+    //  return _buildContactPredefinedList();
+    //} else {
       return _buildContactList();
-    }
+    //}
   }
 }

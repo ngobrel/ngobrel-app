@@ -1,6 +1,5 @@
 library ngobrel_app.db;
 
-import 'package:fixnum/fixnum.dart';
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'generated/ngobrel.pb.dart';
 import 'generated/ngobrel.pbgrpc.dart';
+import 'settings.dart';
 
 class Db {
 
@@ -30,20 +30,30 @@ class Db {
     database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
           await db.execute(
-              "CREATE TABLE chat_list (chat_id TEXT PRIMARY KEY, updated_at INTEGER, created_at INTEGER, excerpt TEXT, title TEXT, avatar BLOB, notification INTEGER)");
+              "CREATE TABLE chat_list (chat_id TEXT PRIMARY KEY, updated_at INTEGER, excerpt TEXT, title TEXT, avatar BLOB, notification INTEGER)");
 
           await db.execute(
               "CREATE TABLE conversations (chat_id TEXT, message_id INTEGER, sender_id TEXT, sender_device_id TEXT, timestamp INTEGER, text TEXT, thumbnail BLOB, quote_text TEXT, quote_thumbnail BLOB, message_type INTEGER, state INTEGER, reception_state INTEGER)");
 
+          await db.execute(
+              """CREATE TABLE contacts (
+              user_id TEXT not null,
+              chat_id TEXT not null,
+              chat_type SMALLINT not null,
+              name TEXT,
+              updated_at TIMESTAMP not null,
+              notification INT not null,
+              PRIMARY KEY (user_id, chat_id)
+          );""");
           await db.execute("create index conversations_chat_id on conversations(chat_id)");
           await db.execute("create unique index conversations_chat_id_message_id on conversations(chat_id, message_id)");
         });
   }
 
   void populateData(String id) async {
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000001', 1, 1, 'Omama olala okaka orama osama obama okama olama', 'Omama', 1)");
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-1000-0000-000000000002', 1535293181413, 1, 'Orama Okaka Olala Osasa Oraya', 'Urara Uta Usalala', 0)");
-    await database.execute("insert into chat_list (chat_id, updated_at, created_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000002', 1535093181413, 1, '📷 Photo', 'Popa Piopola', 1)");
+    await database.execute("insert into chat_list (chat_id, updated_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000001', 1, 'Omama olala okaka orama osama obama okama olama', 'Omama', 1)");
+    await database.execute("insert into chat_list (chat_id, updated_at, excerpt, title, notification) values ('10000000-0000-1000-0000-000000000002', 1535293181413, 'Orama Okaka Olala Osasa Oraya', 'Urara Uta Usalala', 0)");
+    await database.execute("insert into chat_list (chat_id, updated_at, excerpt, title, notification) values ('10000000-0000-0000-0000-000000000002', 1535093181413, '📷 Photo', 'Popa Piopola', 1)");
 
     var img = await rootBundle.load("assets/picsum1.jpg");
     await database.update("chat_list", {"avatar": img.buffer.asUint8List()}, where: "chat_id = '10000000-0000-0000-0000-000000000001'");
@@ -91,15 +101,37 @@ class Db {
       int timestamp = item.timestamp.toInt();
 
       batch.rawQuery("""
-          replace into chat_list (chat_id, updated_at, created_at, title, notification, excerpt) 
-          values (?, ?, ?, ?, ?, ?)
+          replace into chat_list (chat_id, updated_at, title, notification, excerpt) 
+          values (?, ?, ?, ?, ?)
           """,
           [item.chatID,
-           timestamp,
            timestamp,
            item.chatName,
            notification,
            item.excerpt]);
+    }
+    return batch.commit();
+  }
+
+  Future<void> saveContacts(List<Contacts> items) {
+    Settings settings = Settings();
+    Batch batch = database.batch();
+    for (var item in items) {
+      var notification = 0;
+      try {
+        if (item.hasNotification()) {
+          notification = item.notification.toInt();
+        }
+      } catch (e) {
+        // empty
+      }
+
+
+      batch.rawQuery("""
+          replace into contacts (user_id, chat_id, chat_type, updated_at, name, notification) 
+          values (?, ?, 0, date('now'), ?, ?)
+          """,
+          [settings.myId, item.peerID, item.name, notification]);
     }
     return batch.commit();
   }

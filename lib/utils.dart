@@ -1,4 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Utils {
   static String dateFormat(int i) {
@@ -13,5 +15,27 @@ class Utils {
       return DateFormat.jm().format(localtime);
     }
   }
+
+  static String _getInitials(String name) {
+    String result = "";
+    var words = name.split(" ");
+    for (int i = 0; i < max(2, words.length); i ++) {
+      result = result + words[i].substring(0, 1).toUpperCase();
+    }
+    return result;
+  }
+
+  static Widget getAvatar(dynamic avatar, String name) {
+    if (avatar == null) {
+      return CircleAvatar(
+        child: Text(_getInitials(name)),
+      );
+    } else {
+      return CircleAvatar(
+          backgroundImage: MemoryImage(avatar)
+      );
+    }
+  }
+
 }
 

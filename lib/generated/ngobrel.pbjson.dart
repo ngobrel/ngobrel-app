@@ -141,8 +141,9 @@ const GetContactsResponse$json = const {
 const Contacts$json = const {
   '1': 'Contacts',
   '2': const [
-    const {'1': 'userID', '3': 1, '4': 1, '5': 9, '10': 'userID'},
+    const {'1': 'peerID', '3': 1, '4': 1, '5': 9, '10': 'peerID'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'notification', '3': 3, '4': 1, '5': 3, '10': 'notification'},
   ],
 };
 

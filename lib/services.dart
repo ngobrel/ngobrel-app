@@ -13,6 +13,7 @@ class NgobrelService {
 
   bool gettingMessages = false;
   bool gettingChatList = false;
+  bool gettingContacts = false;
 
   factory NgobrelService() {
     return _singleton;
@@ -95,7 +96,6 @@ class NgobrelService {
 
   }
 
-
   Future<void> getChatList() async {
     print("try to get chat list");
 
@@ -119,6 +119,36 @@ class NgobrelService {
       print("Getting chat list error: " + e.toString());
       client = null;
       gettingChatList = false;
+
+      rethrow;
+    }
+    print("geting chat list done");
+
+  }
+
+  Future<void> getContacts() async {
+    print("try to get contacts");
+
+    if (gettingContacts) {
+      print("there is still something getting the contacts");
+      return;
+    }
+    gettingContacts = true;
+    if (client == null) {
+      init();
+    }
+
+    print("getting contacts");
+    try {
+      Db db = Db();
+      var result = await client.getContacts(GetContactsRequest());
+      await db.saveContacts(result.list);
+
+      gettingContacts = false;
+    } catch(e) {
+      print("Getting contacts error: " + e.toString());
+      client = null;
+      gettingContacts = false;
 
       rethrow;
     }
