@@ -66,6 +66,21 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     );
   }
 
+  List<Widget> _getContents(bool isOwnMessage, Map entry) {
+    List<Widget> ret =
+    [
+      _getQuoteText(entry),
+      _getThumbnail(entry),
+      Text(entry['text'] + '\n')
+    ];
+
+    if (isOwnMessage == false) {
+      ret.insert(0, Text(entry['sender_id'].toString(),
+        style: TextStyle(fontWeight: FontWeight.bold),));
+    }
+    return ret;
+  }
+
   Widget _buildRow(BuildContext context, Map entry, int i) {
     var settings = Settings();
     var anchor = entry['anchor'];
@@ -98,13 +113,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 children: <Widget>[
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(entry['sender_id'].toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold),),
-                        _getQuoteText(entry),
-                        _getThumbnail(entry),
-                        Text(entry['text'] + '\n')
-                      ]),
+                      children: _getContents(isOwnMessage, entry)
+                  ),
                   Positioned(
                     right: 0.0,
                     bottom: 0.0,
